@@ -2,7 +2,7 @@
 'use server';
 
 /**
- * @fileOverview Generates a personalized motivational message using an LLM.
+ * @fileOverview Generates a motivational message using an LLM.
  *
  * - generateMotivationalMessage - A function that generates a motivational message.
  * - GenerateMotivationalMessageInput - The input type for the generateMotivationalMessage function.
@@ -13,14 +13,12 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import wav from 'wav';
 
-const GenerateMotivationalMessageInputSchema = z.object({
-  name: z.string().describe('The name of the user.'),
-});
+const GenerateMotivationalMessageInputSchema = z.object({});
 export type GenerateMotivationalMessageInput = z.infer<typeof GenerateMotivationalMessageInputSchema>;
 
 const GenerateMotivationalMessageOutputSchema = z.object({
-  message: z.string().describe('The personalized motivational message.'),
-  audio: z.string().describe('The audio of the personalized motivational message.'),
+  message: z.string().describe('The motivational message.'),
+  audio: z.string().describe('The audio of the motivational message.'),
 });
 export type GenerateMotivationalMessageOutput = z.infer<typeof GenerateMotivationalMessageOutputSchema>;
 
@@ -31,7 +29,7 @@ export async function generateMotivationalMessage(input: GenerateMotivationalMes
 const prompt = ai.definePrompt({
   name: 'generateMotivationalMessagePrompt',
   input: {schema: GenerateMotivationalMessageInputSchema},
-  prompt: `Generate a short, personalized motivational message for {{name}}.`,
+  prompt: `Generate a short, profound motivational message. It should be universally applicable and inspiring. Do not include any emojis.`,
 });
 
 const generateMotivationalMessageFlow = ai.defineFlow(

@@ -18,7 +18,7 @@ export function MotivationalQuote() {
     setIsLoading(true);
     setMotivation(null);
     try {
-      const result = await generateMotivationalMessage({ name: "friend" });
+      const result = await generateMotivationalMessage({});
       setMotivation(result);
     } catch (error) {
       console.error("Failed to get motivation:", error);
