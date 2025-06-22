@@ -31,7 +31,6 @@ export async function generateMotivationalMessage(input: GenerateMotivationalMes
 const prompt = ai.definePrompt({
   name: 'generateMotivationalMessagePrompt',
   input: {schema: GenerateMotivationalMessageInputSchema},
-  output: {schema: z.string()}, // Raw text for TTS
   prompt: `Generate a short, personalized motivational message for {{name}}.`,
 });
 
@@ -42,7 +41,12 @@ const generateMotivationalMessageFlow = ai.defineFlow(
     outputSchema: GenerateMotivationalMessageOutputSchema,
   },
   async input => {
-    const {output: message} = await prompt(input);
+    const response = await prompt(input);
+    const message = response.text;
+
+    if (!message) {
+      throw new Error("The motivational message could not be generated.");
+    }
 
     const { media } = await ai.generate({
       model: 'googleai/gemini-2.5-flash-preview-tts',
@@ -65,7 +69,7 @@ const generateMotivationalMessageFlow = ai.defineFlow(
     );
     const audio = 'data:audio/wav;base64,' + (await toWav(audioBuffer));
 
-    return { message: message!, audio };
+    return { message, audio };
   }
 );
 
