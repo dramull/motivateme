@@ -13,7 +13,9 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import wav from 'wav';
 
-const GenerateMotivationalMessageInputSchema = z.object({});
+const GenerateMotivationalMessageInputSchema = z.object({
+  category: z.string().describe('The category for the motivational message (e.g., School, Parents, Friends, Sports).'),
+});
 export type GenerateMotivationalMessageInput = z.infer<typeof GenerateMotivationalMessageInputSchema>;
 
 const GenerateMotivationalMessageOutputSchema = z.object({
@@ -29,7 +31,7 @@ export async function generateMotivationalMessage(input: GenerateMotivationalMes
 const prompt = ai.definePrompt({
   name: 'generateMotivationalMessagePrompt',
   input: {schema: GenerateMotivationalMessageInputSchema},
-  prompt: `Generate a short, profound motivational message. It should be universally applicable and inspiring. Do not include any emojis.`,
+  prompt: `You are a motivational coach for late teenagers. Generate a short, profound motivational message tailored for a late teen dealing with challenges related to {{{category}}}. The message should be inspiring and resonant with that age group. Keep it concise (1-2 sentences). Do not include any emojis.`,
 });
 
 const generateMotivationalMessageFlow = ai.defineFlow(
