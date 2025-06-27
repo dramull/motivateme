@@ -23,7 +23,7 @@ const GenerateMotivationalMessageOutputSchema = z.object({
 export type GenerateMotivationalMessageOutput = z.infer<typeof GenerateMotivationalMessageOutputSchema>;
 
 export async function generateMotivationalMessage(input: GenerateMotivationalMessageInput): Promise<GenerateMotivationalMessageOutput> {
-  // Direct implementation without defineFlow and definePrompt
+  // Step 1: Generate text using the default model (gemini-2.0-flash)
   const response = await ai.generate({
     prompt: `You are a motivational coach for late teenagers. Generate a short, profound motivational message tailored for a late teen dealing with challenges related to ${input.category}. The message should be inspiring and resonant with that age group. Keep it concise (1-2 sentences). Do not include any emojis.`,
   });
@@ -34,6 +34,7 @@ export async function generateMotivationalMessage(input: GenerateMotivationalMes
     throw new Error("The motivational message could not be generated.");
   }
   
+  // Step 2: Convert text to speech using the TTS-specific model
   const { media } = await ai.generate({
     model: 'googleai/gemini-2.5-flash-preview-tts',
     config: {
