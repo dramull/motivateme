@@ -7,8 +7,8 @@
  * - GenerateMotivationalMessageInput - The input type for the generateMotivationalMessage function.
  * - GenerateMotivationalMessageOutput - The return type for the generateMotivationalMessage function.
  */
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {getAI} from '@/ai/genkit-server';
+import {z} from 'zod';  // Use zod directly instead of from genkit
 import wav from 'wav';
 
 const GenerateMotivationalMessageInputSchema = z.object({
@@ -23,6 +23,8 @@ const GenerateMotivationalMessageOutputSchema = z.object({
 export type GenerateMotivationalMessageOutput = z.infer<typeof GenerateMotivationalMessageOutputSchema>;
 
 export async function generateMotivationalMessage(input: GenerateMotivationalMessageInput): Promise<GenerateMotivationalMessageOutput> {
+  const ai = getAI();  // Get the AI instance
+  
   // Step 1: Generate text using the default model (gemini-2.0-flash)
   const response = await ai.generate({
     prompt: `You are a motivational coach for late teenagers. Generate a short, profound motivational message tailored for a late teen dealing with challenges related to ${input.category}. The message should be inspiring and resonant with that age group. Keep it concise (1-2 sentences). Do not include any emojis.`,
